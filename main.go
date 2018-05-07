@@ -46,6 +46,8 @@ func main() {
 func genSymPtr() {
 	goloader.RegSymbol(symPtr)
 	goloader.RegTypes(symPtr, app)
+	var a gin.HandlerFunc
+	goloader.RegTypes(symPtr, a)
 	goloader.RegTypes(symPtr, strconv.ParseInt)
 }
 

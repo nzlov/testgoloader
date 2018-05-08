@@ -1,10 +1,10 @@
 package main
 
 import (
-	"errors"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nzlov/testgoloader/engine"
 )
 
 const (
@@ -15,7 +15,7 @@ const (
 func PluginLoad(objs ...interface{}) (string, string, error) {
 	obj, ok := objs[0].(*gin.Engine)
 	if !ok {
-		return NAME, VERSION, errors.New("params 1 need *gin.Engine")
+		return NAME, VERSION, engine.NewErrInitParams("params 1 need *gin.Engine")
 	}
 	obj.GET("/add/:a/:b", Add)
 	return NAME, VERSION, nil

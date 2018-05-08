@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strconv"
 
 	"github.com/nzlov/testgoloader/engine"
@@ -20,7 +21,7 @@ func main() {
 
 	genSymPtr()
 
-	plugin = engine.NewPlugin("b.o")
+	plugin = engine.NewPlugin(os.Args[1])
 
 	err := reload()
 	if err != nil {

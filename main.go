@@ -19,6 +19,9 @@ func main() {
 	app = gin.Default()
 
 	genSymPtr()
+
+	plugin = engine.NewPlugin("b.o")
+
 	err := reload()
 	if err != nil {
 		panic(err)
@@ -46,13 +49,11 @@ func main() {
 func genSymPtr() {
 	goloader.RegSymbol(symPtr)
 	goloader.RegTypes(symPtr, app)
-	var a gin.HandlerFunc
-	goloader.RegTypes(symPtr, a)
+	goloader.RegTypes(symPtr, gin.HandlerFunc(nil))
 	goloader.RegTypes(symPtr, strconv.ParseInt)
 }
 
 func reload() error {
-	plugin = engine.NewPlugin("a.o")
 
 	err := plugin.Load(symPtr, app)
 	if err != nil {

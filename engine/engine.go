@@ -8,10 +8,14 @@ import (
 	"github.com/dearplain/goloader"
 )
 
-const PluginInit = "main.PluginInit"
+const (
+	PluginLoad   = "main.PluginLoad"
+	PluginUnload = "main.PluginUnLoad"
+)
 
 // 插件初始化方法 返回 Name,Version,error
-type PluginInitFunc = *func(...interface{}) (string, string, error)
+type PluginLoadFunc = *func(...interface{}) (string, string, error)
+type PluginUnloadFunc = *func(...interface{}) error
 
 var (
 	ErrNoPluginInitFunc = errors.New("Plugin file don't defined PluginInit Func.")
@@ -53,12 +57,12 @@ func (p *Plugin) Load(symPtr map[string]uintptr, objs ...interface{}) error {
 		return err
 	}
 
-	initFuncPtr, ok := p.codeModule.Syms[PluginInit]
+	initFuncPtr, ok := p.codeModule.Syms[PluginLoad]
 	if !ok {
 		return ErrNoPluginInitFunc
 	}
 	funcPtrContainer := (uintptr)(unsafe.Pointer(&initFuncPtr))
-	initFunc := *(PluginInitFunc)(unsafe.Pointer(&funcPtrContainer))
+	initFunc := *(PluginLoadFunc)(unsafe.Pointer(&funcPtrContainer))
 	name, version, err := initFunc(objs...)
 	if err != nil {
 		return err
@@ -76,11 +80,22 @@ func (p *Plugin) Func(name string) (unsafe.Pointer, bool) {
 	return unsafe.Pointer(nil), false
 }
 
-func (p *Plugin) Unload() {
+func (p *Plugin) Unload(args ...interface{}) error {
 	if p.codeModule != nil {
+		unloadFuncPtr, ok := p.codeModule.Syms[PluginUnload]
+		if ok {
+			funcPtrContainer := (uintptr)(unsafe.Pointer(&unloadFuncPtr))
+			unloadFunc := *(PluginUnloadFunc)(unsafe.Pointer(&funcPtrContainer))
+			err := unloadFunc(args...)
+			if err != nil {
+				return err
+			}
+		}
+
 		p.codeModule.Unload()
 		p.codeModule = nil
 		p.Name = "Unknown"
 		p.Version = "Unknown"
 	}
+	return nil
 }

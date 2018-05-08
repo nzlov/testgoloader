@@ -1,25 +1,10 @@
 package main
 
 import (
-	"errors"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-const (
-	NAME    = "a"
-	VERSION = "0.0.1"
-)
-
-func PluginLoad(objs ...interface{}) (string, string, error) {
-	obj, ok := objs[0].(*gin.Engine)
-	if !ok {
-		return NAME, VERSION, errors.New("params 1 need *gin.Engine")
-	}
-	obj.GET("/add/:a/:b", Add)
-	return NAME, VERSION, nil
-}
 
 func Add(c *gin.Context) {
 	as := c.Param("a")

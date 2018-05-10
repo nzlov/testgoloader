@@ -42,6 +42,6 @@ func Add(c *gin.Context) {
 	}
 	c.JSON(200, map[string]interface{}{
 		"success": false,
-		"data":    (a + b) * 1,
+		"data":    (a + b) * engine.Var1,
 	})
 }

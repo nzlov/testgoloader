@@ -50,7 +50,9 @@ func main() {
 func genSymPtr() {
 	goloader.RegSymbol(symPtr)
 	goloader.RegTypes(symPtr, app)
+	goloader.RegTypes(symPtr, &engine.Var1)
 	goloader.RegTypes(symPtr, gin.HandlerFunc(nil))
+	goloader.RegTypes(symPtr, &engine.ErrInitParams{})
 	goloader.RegTypes(symPtr, strconv.ParseInt)
 }
 

@@ -14,7 +14,6 @@ const (
 	VERSION = "0.0.1"
 )
 
-var symPtr = map[string]uintptr{}
 var codeModule *goloader.CodeModule
 
 func PluginLoad(objs ...interface{}) (string, string, error) {
@@ -22,7 +21,7 @@ func PluginLoad(objs ...interface{}) (string, string, error) {
 	if !ok {
 		return NAME, VERSION, errors.New("params 1 need *gin.Engine")
 	}
-
+	symPtr := map[string]uintptr{}
 	goloader.RegSymbol(symPtr)
 	f, err := os.Open("b1.o")
 	if err != nil {

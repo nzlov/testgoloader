@@ -18,7 +18,7 @@ type PluginLoadFunc = *func(...interface{}) (string, string, error)
 type PluginUnloadFunc = *func(...interface{}) error
 
 var (
-	ErrNoPluginInitFunc = errors.New("Plugin file don't defined PluginInit Func.")
+	ErrNoPluginInitFunc = errors.New("Plugin file don't defined PluginLoad Func.")
 )
 
 var DefaultSymPtr = make(map[string]uintptr)
